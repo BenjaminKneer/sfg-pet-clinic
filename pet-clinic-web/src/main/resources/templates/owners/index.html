@@ -5,6 +5,25 @@
     <title>Vet Index</title>
 </head>
 <body>
-<h1 th:text="'List of Owners'">List of Owners</h1>
+    <h1 th:text="'List of Owners'">List of Owners</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>first name</th>
+            <th>last name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="owner : ${owners}">
+            <td th:text="${owner?.id}">id</td>
+            <td th:text="${owner?.firstName}">first name</td>
+            <td th:text="${owner?.lastName}">last name</td>
+        </tr>
+        </tbody>
+
+    </table>
+
 </body>
 </html>
