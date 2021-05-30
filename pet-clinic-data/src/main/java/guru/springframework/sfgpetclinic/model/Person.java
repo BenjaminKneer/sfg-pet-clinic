@@ -6,7 +6,7 @@ public class Person extends BaseEntity {
 
     private String firstName;
     private String lastName;
-    private Set<Pet> pets;
+
 
     public String getFirstName() {
         return firstName;
@@ -24,11 +24,5 @@ public class Person extends BaseEntity {
         this.lastName = lastName;
     }
 
-    public Set<Pet> getPets() {
-        return pets;
-    }
 
-    public void setPets(Set<Pet> pets) {
-        this.pets = pets;
-    }
 }
