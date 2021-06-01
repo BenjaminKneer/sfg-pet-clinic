@@ -1,11 +1,9 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
-import guru.springframework.sfgpetclinic.model.Owner;
-import guru.springframework.sfgpetclinic.model.Pet;
-import guru.springframework.sfgpetclinic.model.PetType;
-import guru.springframework.sfgpetclinic.model.Vet;
+import guru.springframework.sfgpetclinic.model.*;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
+import guru.springframework.sfgpetclinic.services.SpecialtyService;
 import guru.springframework.sfgpetclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -20,19 +18,30 @@ public class DataLoader implements CommandLineRunner {
     private final OwnerService ownerService;
     private final VetService vetService;
     private final PetTypeService petTypeService;
+    private final SpecialtyService specialtyService;
 
 
     public DataLoader(OwnerService ownerService,
                       VetService vetService,
-                      PetTypeService petTypeService) {
+                      PetTypeService petTypeService,
+                      SpecialtyService specialtyService) {
 
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
+        this.specialtyService = specialtyService;
     }
 
     @Override
     public void run(String... args) throws Exception {
+        int count = petTypeService.findAll().size();
+
+        if (count == 0) {
+            loadData();
+        }
+    }
+
+    private void loadData() {
         List<PetType> petTypeList = createPetTypeData();
         System.out.println("loaded pettypes");
 
@@ -53,9 +62,26 @@ public class DataLoader implements CommandLineRunner {
         fionasCat.setPetType(petTypeList.get(1));
         ownerList.get(1).getPets().add(fionasCat);
 
+        Specialty radiology = new Specialty();
+        radiology.setDescription("radiology description");
+
+        Specialty surgerey = new Specialty();
+        surgerey.setDescription("surgerey description");
+
+        Specialty dentistry = new Specialty();
+        dentistry.setDescription("dentistry description");
+
+        Specialty radiologySaved = specialtyService.save(radiology);
+        Specialty surgereySaved = specialtyService.save(surgerey);
+        Specialty dentistrySaved = specialtyService.save(dentistry);
 
         List<Vet> vetList = createVetData();
         System.out.println("loaded vets");
+
+        vetList.get(0).getSpecialities().add(radiologySaved);
+        vetList.get(1).getSpecialities().add(surgereySaved);
+        vetService.save(vetList.get(0));
+        vetService.save(vetList.get(1));
 
     }
 
